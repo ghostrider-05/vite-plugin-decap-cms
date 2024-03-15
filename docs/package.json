@@ -1,0 +1,18 @@
+{
+  "name": "@vite-plugin-decap-cms/docs",
+  "version": "0.1.0",
+  "description": "The documentation for connecting Decap CMS to your Vite project",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "docs:dev": "vitepress dev src",
+    "docs:build": "vitepress build src",
+    "docs:preview": "vitepress preview src",
+    "cms:dev": "npx decap-server"
+  },
+  "author": "ghostrider-05",
+  "license": "ISC",
+  "devDependencies": {
+    "vitepress": "^1.0.0-rc.44"
+  }
+}

@@ -1,0 +1,52 @@
+{
+    "name": "vite-plugin-decap-cms",
+    "version": "0.1.0",
+    "description": "Simplify the configuration of Decap cms for Vite projects",
+    "type": "module",
+    "license": "MIT",
+    "keywords": [
+        "vite",
+        "vite-plugin",
+        "decap-cms"
+    ],
+    "homepage": "https://github.com/ghostrider-05/vite-plugin-decap-cms",
+    "bugs": "https://github.com/ghostrider-05/vite-plugin-decap-cms/issues",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ghostrider-05/vite-plugin-decap-cms"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "require": "./dist/index.cjs",
+            "import": "./dist/index.js"
+        }
+    },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsup src/index.ts --dts --format cjs,esm"
+    },
+    "dependencies": {
+        "yaml": "^2.4.0"
+    },
+    "devDependencies": {
+        "@types/node": "18",
+        "@typescript-eslint/eslint-plugin": "^7.1.1",
+        "@typescript-eslint/parser": "^7.1.1",
+        "decap-cms-core": "^3.3.3",
+        "eslint": "^8.54.0",
+        "tsup": "^8.0.2",
+        "typescript": "^5.3.2",
+        "vite": "^5.0.2",
+        "vitest": "^0.34.6",
+        "vue": "^3.3.9"
+    },
+    "optionalDependencies": {
+        "decap-cms-app": "^3.1.2"
+    }
+}

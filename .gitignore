@@ -1,0 +1,7 @@
+node_modules
+dist
+
+# Exclude docs cache
+**/.vitepress/cache
+# Configs are generated, no need to include them
+docs/src/public/admin/
