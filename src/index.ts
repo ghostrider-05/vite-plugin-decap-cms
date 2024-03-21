@@ -20,7 +20,6 @@ async function updateConfig (options: Options, config: ResolvedConfig) {
     validateLoadOptions(options.load)
 
     const loginFile = createIndexFile(options)
-
     const configFile = createConfigFile(options.config, config.command)
 
     await writeToFolder(

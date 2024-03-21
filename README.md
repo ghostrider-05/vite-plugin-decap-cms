@@ -6,8 +6,7 @@
 ![NPM Downloads](https://img.shields.io/npm/dm/vite-plugin-decap-cms)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/ghostrider-05/vite-plugin-decap-cms)
 
-
-> [!DANGER] Unstable version
+> [!WARNING]
 > This plugin has not reached a stable version, 1.0.0, and can include breaking changes following the semver specification. This plugin is open for contributions, both for code, suggestions and (missing) documentation.
 
 ## Install
@@ -53,9 +52,11 @@ export default defineConfig({
 })
 ```
 
+For more options and guides, see [the documentation](https://vite-plugin-decap-cms.pages.dev)
+
 ## Example
 
-See [the documentation](https://vite-plugin-decap.pages.dev) for an example
+See [the documentation CMS](https://vite-plugin-decap-cms.pages.dev/admin/index.html) for an example
 
 ## Development
 

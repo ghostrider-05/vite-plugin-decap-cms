@@ -34,6 +34,13 @@ export type KeysToCamelCase<T> = {
 
 type PickRequired<O extends object, K extends keyof O> = Omit<O, K> & Required<Pick<O, K>>
 
+export type EnvContextOption =
+    | boolean
+    | 'dev'
+    | 'prod'
+
+export type EnvDevContextOption = Exclude<EnvContextOption, 'prod'>
+
 // collections & fields
 
 export type CollectionType =
@@ -86,8 +93,7 @@ export type DecapCmsConfig = KeysToCamelCase<Omit<CmsConfig,
 >> & {
     backend: {
         local?:
-            | boolean
-            | 'dev'
+            | EnvDevContextOption
             | KeysToCamelCase<CmsLocalBackend>
 
         /**
@@ -99,10 +105,7 @@ export type DecapCmsConfig = KeysToCamelCase<Omit<CmsConfig,
          * @default false
          */
         // TODO: local_backend writes to files, why need the branch?
-        useCurrentBranch?:
-            | boolean
-            | 'dev'
-            | 'prod'
+        useCurrentBranch?: EnvContextOption
     } & KeysToCamelCase<CmsBackend>
 
     collections: DecapCmsCollection[]
@@ -119,9 +122,47 @@ export type CdnLinkOptions =
     | string
     | { version?: string, base?: string }
 
+// Partially copied from VitePress
+export type HeadConfig =
+    | string
+    | [string, Record<string, string>]
+    | [string, Record<string, string>, string]
+
 export interface LoginPageOptions {
+    /**
+     * The title for the CMS pages
+     * @default 'Content Manager' 
+     */
     title?: string
-    head?: string[]
+
+    /**
+     * The favicon for the CMS pages
+     */
+    icon?: string
+    
+    /**
+     * Additional head items for the page.
+     * The following items are configured already:
+     * - title
+     * - viewport
+     * - robots
+     * - charset
+     * - favicon (if used in the config)
+     * - Netlify Identity script (if used in the config)
+     * - custom config path (if used in the config)
+     */
+    head?: HeadConfig[]
+
+    /**
+     * Replace the login page with your own html
+     */
+    html?: string
+
+    /**
+     * The version of Netlify Identity to use
+     * @default '1'
+     */
+    netlifyIdentityVersion?: string
 }
 
 type YmlStringifyOptions = Parameters<typeof import('yaml').stringify>
