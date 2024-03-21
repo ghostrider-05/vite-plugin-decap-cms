@@ -52,9 +52,11 @@ export default defineConfig({
 })
 ```
 
+For more options and guides, see [the documentation](https://vite-plugin-decap-cms.pages.dev)
+
 ## Example
 
-See [the documentation](https://vite-plugin-decap-cms.pages.dev) for an example
+See [the documentation CMS](https://vite-plugin-decap-cms.pages.dev/admin/index.html) for an example
 
 ## Development
 

@@ -49,6 +49,7 @@ export default defineConfig({
             }
         },
 
+        externalLinkIcon: true,
         editLink: {
             pattern: (page) => `/admin/index.html#/edit/${page.relativePath.replace('.md', '')}`
         },
