@@ -43,7 +43,7 @@ async function updateConfig (options: Options, config: ResolvedConfig) {
 export * from './types'
 export * from './util'
 
-export default function VitePluginDecapCMS (options: Options) {
+export default function VitePluginDecapCMS (options: Options): Plugin {
     let stored: ResolvedConfig | null = null
     const debug = (...str: string[]) => {
         if (options.debug) console.debug(str)
