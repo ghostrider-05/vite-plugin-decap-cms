@@ -32,7 +32,7 @@ export default<Options> {
                     delete: false,
                     editor: { preview: false },
                 },
-            })
+            }),
         ]
     }
 }
