@@ -44,6 +44,7 @@ export default defineConfig({
                 items: [
                     { text: 'Introduction', link: 'index.html' },
                     { text: 'Getting started', link: 'getting-started' },
+                    { text: 'Configuration', link: 'configuration' },
                     { text: 'VitePress', link: 'vitepress' },
                 ]
             }
