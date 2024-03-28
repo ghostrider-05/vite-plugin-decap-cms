@@ -1,6 +1,9 @@
 import { getGitData } from '../util'
 
-import type { DecapCmsConfig, KeysToSnakeCase } from '../types'
+import type { ResolvedConfig } from 'vite'
+import type { DecapCmsConfig, EnvContextOption, KeysToSnakeCase } from '../types'
+
+type ViteCommand = ResolvedConfig['command']
 
 const objToSnakeCase = <T extends object>(obj: T) => {
     const ignoredKeys = ['i18n']
@@ -11,7 +14,7 @@ const objToSnakeCase = <T extends object>(obj: T) => {
     ) as KeysToSnakeCase<{ [k in keyof T]: T[k] }>
 }
 
-function getBooleanFromEnv (value: boolean | 'dev' | 'prod' | undefined, command: 'build' | 'serve'): boolean {
+function getBooleanFromEnv (value: EnvContextOption | undefined, command: ViteCommand): boolean {
     return value === 'dev'
         ? command === 'serve'
         : value === 'prod'
@@ -19,7 +22,7 @@ function getBooleanFromEnv (value: boolean | 'dev' | 'prod' | undefined, command
             : (value ?? false)
 }
 
-function resolveBackend (options: DecapCmsConfig['backend'], command: 'build' | 'serve') {
+function resolveBackend (options: DecapCmsConfig['backend'], command: ViteCommand) {
     const { local, name, ...backend } = options
 
     const branch = 'useCurrentBranch' in options && getBooleanFromEnv(options.useCurrentBranch, command)
@@ -44,7 +47,7 @@ function resolveBackend (options: DecapCmsConfig['backend'], command: 'build' | 
     return resolved
 }
 
-export function createConfigFile (config: DecapCmsConfig, command: 'build' | 'serve') {
+export function createConfigFile (config: DecapCmsConfig, command: ViteCommand) {
     const { backend, collections, ...options } = config
 
     return {
