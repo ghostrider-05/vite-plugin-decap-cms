@@ -1,6 +1,6 @@
 {
     "name": "vite-plugin-decap-cms",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "Simplify the configuration of Decap cms for Vite projects",
     "type": "module",
     "license": "MIT",
