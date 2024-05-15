@@ -41,6 +41,13 @@ Use this to replace the login page from the plugin with your own html
 - Type: `'string'`
 - Required: `false`
 
+#### additionalHtml
+
+Use this to add custom html sections to the CMS, such as a footer, navbar, etc.
+
+- Type: `'string'`
+- Required: `false`
+
 #### head
 
 Additional head items for the page. The following items are configured already:

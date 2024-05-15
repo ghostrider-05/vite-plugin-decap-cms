@@ -2,12 +2,13 @@ import { defineConfig } from 'vitepress'
 
 import VitePluginDecapCMS from '../../../../src'
 import pluginOptions from './plugin'
+import { PluginOption } from 'vite'
 
 export default defineConfig({
     vite: {
         plugins: [
-            VitePluginDecapCMS(pluginOptions),
-        ]
+            <PluginOption>VitePluginDecapCMS(pluginOptions),
+        ],
     },
 
     title: 'vite-plugin-decap-cms',
@@ -52,7 +53,7 @@ export default defineConfig({
 
         externalLinkIcon: true,
         editLink: {
-            pattern: (page) => `/admin/index.html#/edit/${page.relativePath.replace('.md', '')}`
+            pattern: ({ relativePath }) => `/admin/index.html#/edit/${relativePath.replace('.md', '').replace}`
         },
 
         socialLinks: [
