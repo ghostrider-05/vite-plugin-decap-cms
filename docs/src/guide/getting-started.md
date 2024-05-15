@@ -10,12 +10,22 @@ yarn add vite-plugin-decap-cms -D
 
 ## Configuration
 
+:::info Ignore files
 Since this plugin will create all the files for you, you can ignore the `admin` folder in your `.gitignore`:
 
 ```sh
 # Configs are generated, no need to include them
 docs/src/public/admin/
 ```
+
+If you need other CMS assets files or scripts in `/admin/` you can also ignore only the configuration:
+
+```sh
+docs/src/public/admin/index.html
+docs/src/public/admin/config.yml
+```
+
+:::
 
 Then configure Vite with the plugin:
 

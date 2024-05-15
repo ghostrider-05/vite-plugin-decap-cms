@@ -5,7 +5,8 @@ hero:
     name: Vite + Decap CMS
     text: Configure and write your Decap CMS
     tagline: Simplifying the CMS configuration
-    image: /images/vitepress.png
+    image: 
+      src: https://raw.githubusercontent.com/decaporg/decap-website/main/static/img/decap-logo.svg
     actions:
         - text: Get started
           link: /guide/
