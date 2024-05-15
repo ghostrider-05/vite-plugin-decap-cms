@@ -1,6 +1,17 @@
-import type { CmsEventListener, CMS, Formatter } from 'decap-cms-core'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import type { 
+    CMS,
+    CmsEventListener,
+    CmsWidgetControlProps,
+    CmsWidgetPreviewProps,
+    EditorComponentOptions,
+    Formatter,
+    PreviewTemplateComponentProps,
+} from 'decap-cms-core'
+import { type Component } from 'vue'
 
 import type { DecapCmsField, DecapCmsFieldWidget } from './types'
+// import veuary from 'veaury'
 
 export interface CmsHookContext {
     app: CMS
@@ -10,9 +21,10 @@ export type CmsEventHookContext =
     & CmsHookContext
     & Parameters<CmsEventListener['handler']>[0]
 
-export type CmsEditorComponentOptions = Omit<DecapCmsFieldWidget<'object'>, 'widget' | 'label' | 'fields' | ''> & {
+export type CmsEditorComponentOptions = EditorComponentOptions & {
     id: string
     label: string
+    pattern: RegExp
     fields: DecapCmsField[]
 }
 
@@ -21,6 +33,40 @@ export interface CmsEditorFormatter {
     extension: string
     formatter: Formatter
 }
+
+// type BaseCustomComponent =
+//     | { type?: 'react', component: React.Component }
+//     | { type: 'vue', component: Component, options?: veuary.options }
+
+// export interface CmsCustomWidgetReactOptions {
+//     id: string
+//     type?: 'react'
+//     component: React.Component<CmsWidgetControlProps> | string
+//     preview?: React.Component<CmsWidgetPreviewProps>
+//     schema?: object
+// }
+
+// export interface CmsCustomWidgetVueOptions {
+//     id: string
+//     type: 'vue'
+//     component: Component | string
+//     preview?: Component
+//     schema?: string
+//     options?: veuary.options
+// }
+
+// export type CmsCustomWidgetOptions =
+//     | CmsCustomWidgetReactOptions
+//     | CmsCustomWidgetVueOptions
+
+// interface CmsPreviewReactTemplate {
+//     type?: 'react'
+//     name: string
+//     component: React.Component<PreviewTemplateComponentProps>
+// }
+
+// type CmsPreviewTemplate =
+//     | CmsPreviewReactTemplate
 
 export type ScriptOptions = {
     /**
@@ -67,9 +113,10 @@ export type ScriptOptions = {
      */
     useManualInitialization?: boolean
 
-    widgets?: []
+    // TODO: enable
+    // widgets?: CmsCustomWidgetOptions[]
 
-    editorComponents?: CmsEditorComponentOptions[]
+    markdownEditorComponents?: CmsEditorComponentOptions[]
 
     /**
      * Register custom file formatters.
@@ -85,43 +132,63 @@ export type ScriptOptions = {
      * @default []
      */
     previewStylesheets?: (string | { style: string, options: { raw: true } })[]
+
+    // previewTemplates?: CmsPreviewTemplate[]
+}
+
+// function resolveComponent (base: BaseCustomComponent) {
+//     if (base.type !== 'vue') return base.component
+//     else return veuary.applyVueInReact(base.component, base.options)
+// }
+
+function createCmsFunction <T>(method: string, items: T[] | undefined, createParams: (item: T) => string | null, options?: { base?: string, joinChar?: string }) {
+    const create = (params: string) => `${options?.base ?? 'CMS'}.${method}(${params})`
+
+    return (items ?? [])
+        .map(item => {
+            const params = createParams(item)
+            if (!params) return null
+            else return create(params)
+        })
+        .filter(Boolean)
+        .join(options?.joinChar ?? '\n')
 }
 
 export function createScript (options: ScriptOptions) {
     const {
         useManualInitialization,
-        editorComponents,
+        markdownEditorComponents,
         formatters,
         previewStylesheets,
-        widgets,
+        // previewTemplates,
+        // widgets,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onGenerated,
         onInitialized,
         ...eventHooks
     } = options
 
-    const joinChar = '\n'
+    const events = createCmsFunction('registerEventListener', Object.keys(eventHooks), (hookName) => {
+        const hook = eventHooks[<keyof typeof eventHooks>hookName]
+        if (!hook) return null
+        else {
+            const name = hookName.slice(2)[0].toLowerCase() + hookName.slice(3)
+            return `{ name: '${name}', handler: data => { function ${hook.toString()}; ${hookName}({ app: CMS, ...data }) } }`
+        }
+    })
 
-    const events = Object.keys(eventHooks)
-        .map(hookName => {
-            const hook = eventHooks[<keyof typeof eventHooks>hookName]
-            if (!hook) return null
-            else {
-                const name = hookName.slice(2)[0].toLowerCase() + hookName.slice(3)
-                return `CMS.registerEventListener({ name: '${name}', handler: data => { function ${hook.toString()}; ${hookName}({ app: CMS, ...data }) } })`
-            } 
+    const customFormatters = createCmsFunction('registerCustomFormat', formatters, ({ name, extension, formatter }) => {
+        return `'${name}', '${extension}', ${formatter.toString()}`
+    })
 
-        })
-        .filter(Boolean)
-        .join(joinChar)
+    const customStyles = createCmsFunction('registerPreviewStyle', previewStylesheets, (style) => {
+        return typeof style === 'string' ? style : `${style.style}, { raw: ${style.options.raw} }`
+    })
 
-    const customFormatters = (formatters ?? [])
-        .map(({ name, extension, formatter }) => `CMS.registerCustomFormat('${name}', '${extension}', ${formatter.toString()})`)
-        .join(joinChar)
-
-    const customStyles = (previewStylesheets ?? [])
-        .map(style => 'CMS.registerPreviewStyle(' + (typeof style === 'string' ? style : `${style.style}, { raw: ${style.options.raw} }`) + ')')
-        .join(joinChar)
+    const editorComponents = createCmsFunction('registerEditorComponent', markdownEditorComponents, (item) => {
+        const { pattern, toPreview, toBlock, fromBlock, ...component } = item
+        return `{ pattern: ${pattern}, toPreview: ${toPreview.toString()}, toBlock: ${toBlock.toString()}, fromBlock: ${fromBlock.toString()}, ...${JSON.stringify(component) }}`
+    })
 
     return `
 <script>
@@ -130,5 +197,6 @@ ${onInitialized != undefined ? `window.onload = () => { function ${onInitialized
 ${customFormatters}
 ${customStyles}
 ${events}
+${editorComponents}
 </script>`
 }

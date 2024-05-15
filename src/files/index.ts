@@ -97,6 +97,7 @@ export function createIndexFile (pluginOptions: Options) {
     <body>
         ${features.cdn_route ? `<script src="${features.cdn_route}"></script>` : ''}
         ${script ? createScript(script) : ''}
+        ${pluginOptions.login?.additionalHtml ? `${pluginOptions.login?.additionalHtml}\n\n<div id="nc-root"></div>` : ''}
     </body>
 </html>${features.custom_logo ? `\n\n<style>
 span[class*='CustomIconWrapper'] {
