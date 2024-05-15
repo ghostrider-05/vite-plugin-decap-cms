@@ -14,6 +14,7 @@ import type {
 } from 'decap-cms-core'
 
 import { ScriptOptions } from './script'
+import { ExecOptions } from 'child_process'
 
 type CamelToSnakeCase<S extends string, I extends string = never> = S extends `${infer T}${infer U}` ?
     S extends I ? S :
@@ -159,6 +160,11 @@ export interface LoginPageOptions {
     html?: string
 
     /**
+     * Instead of replacing all html, load this next to the CMS Editor for a custom footer, nav, etc.
+     */
+    additionalHtml?: string
+
+    /**
      * The version of Netlify Identity to use
      * @default '1'
      */
@@ -171,6 +177,27 @@ type YmlStringifyOptions = Parameters<typeof import('yaml').stringify>
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface NpmOptions {
     
+}
+
+export interface DecapProxyOptions {
+    /**
+     * If using local backend AND Vite dev mode is running, control whether to run the decap-server proxy. 
+     * @default true
+     */
+    enabled?: boolean
+
+    /**
+     * Run the proxy on a different port.
+     * Does not change the local backend allowed hosts
+     * @default 8081
+     */
+    port?: number
+
+    /**
+     * Pass any option to use in the child process
+     * @default undefined
+     */
+    process?: ExecOptions
 }
 
 export interface Options {
@@ -207,6 +234,11 @@ export interface Options {
      * Run custom JS to enhance the CMS
      */
     script?: ScriptOptions
+
+    /**
+     * Options for the Decap server proxy
+     */
+    proxy?: DecapProxyOptions
 
     /**
      * Yml stringify options for writing the config.yml file

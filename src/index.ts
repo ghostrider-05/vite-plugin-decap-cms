@@ -1,7 +1,9 @@
+import { exec } from 'child_process'
+
 import { stringify } from 'yaml'
 import { type ResolvedConfig, type Plugin } from 'vite'
 
-import type { Options } from './types'
+import type { DecapProxyOptions, Options } from './types'
 
 import { createConfigFile } from './files/config'
 import { createIndexFile } from './files/index'
@@ -14,6 +16,25 @@ function validateLoadOptions (options: Options['load']) {
     const valid = ['npm', 'cdn'].includes(options?.method ?? 'cdn')
        
     if (!valid) throw new Error('Invalid load options for decap-cms provided')
+}
+
+function runProxy (options: DecapProxyOptions | undefined) {
+    const proxy = exec('npx decap-server', {
+        ...(options?.process ?? {}),
+        env: {
+            ...(options?.process?.env ?? {}),
+            PORT: (options?.port ?? 8081).toString()
+        },
+    })
+
+    proxy.stdout?.pipe(process.stdout)
+
+    proxy.on('error', (err) => {
+        if ('code' in err && err.code === 'EADDRINUSE') {
+            console.log('[PROXY] Port is already used')
+        } else throw err
+    })
+    process.on('beforeExit', () => proxy.kill())
 }
 
 async function updateConfig (options: Options, config: ResolvedConfig) {
@@ -33,6 +54,10 @@ async function updateConfig (options: Options, config: ResolvedConfig) {
             ]
         }
     )
+
+    if (config.command === 'serve' && configFile.local_backend !== false && (options.proxy?.enabled ?? true)) {
+        runProxy(options.proxy)
+    }
 
     await options.script?.onConfigUpdated?.()
     if (config.command === 'build') {
