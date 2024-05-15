@@ -102,7 +102,7 @@ Called when the SSG has been built.
 
 #### onConfigUpdated <Badge text="env: node" type="info" />
 
-Called when the Vite plugin has written configuration 
+Called when the Vite plugin has written configuration
 
 #### useManualInitialization
 
@@ -125,6 +125,13 @@ Register [custom file formatters](https://decapcms.org/docs/custom-formatters/)
 
 Register [custom stylesheets](https://decapcms.org/docs/customization/)
 
+#### markdownEditorComponents
+
+- Type: `CmsEditorComponentOptions[]`
+- Default: `[]`
+
+Register [custom components](https://decapcms.org/docs/custom-widgets/) to use in the rich text markdown editor field.
+
 ## Decap config
 
 While most options are the same as the [Decap CMS configuration options](https://decapcms.org/docs/configuration-options/), there are a few differences:
@@ -132,6 +139,7 @@ While most options are the same as the [Decap CMS configuration options](https:/
 - all plugin config options are in **camel case**, not snake case! The plugin will convert it to snake case for the final `config.yml`. Note that snake case is still supported, but not typed in TypeScript.
 - some plugin options are dependent on the Vite command run, so the final config can be different between your development and production setup
 - some properties are changed, removed or added. See the list below for all differences.
+- the `decap-server` proxy is run by default on local backends in serve mode. Use `options.proxy` to disable the proxy or to change the port / process options.
 
 ### backend
 

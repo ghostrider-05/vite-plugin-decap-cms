@@ -116,6 +116,10 @@ export type ScriptOptions = {
     // TODO: enable
     // widgets?: CmsCustomWidgetOptions[]
 
+    /**
+     * Register custom components to use in the rich text markdown editor field
+     * @see https://decapcms.org/docs/custom-widgets/
+     */
     markdownEditorComponents?: CmsEditorComponentOptions[]
 
     /**
