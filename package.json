@@ -32,6 +32,8 @@
         "build": "tsup src/index.ts --dts --format cjs,esm"
     },
     "dependencies": {
+        "decap-server": "^3.0.4",
+        "veaury": "^2.3.18",
         "yaml": "^2.4.0"
     },
     "devDependencies": {
