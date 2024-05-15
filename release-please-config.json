@@ -1,0 +1,4 @@
+{
+    "bump-minor-pre-major": true,
+    "release-type": "node"
+}

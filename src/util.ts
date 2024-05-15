@@ -149,34 +149,40 @@ export class VitePress {
                 name: 'sidebar',
                 label: 'Whether to display the sidebar',
                 default: true,
+                required: false,
             }, overwrites?.sidebar),
             // TODO: add aside 'left' option
             createOverwriteableField('boolean', {
                 name: 'aside',
                 label: 'Whether to display the aside container',
                 default: true,
+                required: false,
             }, overwrites?.aside),
             // TODO: add support for [number, number] | 'deep' | false
             createOverwriteableField('number', {
                 name: 'outline',
                 label: 'The header levels in the outline',
                 default: 2,
+                required: false,
             }, overwrites?.outline),
             // TODO: add support for Date 
             createOverwriteableField('boolean', {
                 name: 'lastUpdated',
                 label: 'Whether to display last updated text',
                 default: true,
+                required: false,
             }, overwrites?.lastUpdated),
             createOverwriteableField('boolean', {
                 name: 'editLink',
                 label: 'Whether to display edit link text',
                 default: true,
+                required: false,
             }, overwrites?.editLink),
             createOverwriteableField('boolean', {
                 name: 'footer',
                 label: 'Whether to display footer text',
                 default: true,
+                required: false,
             }, overwrites?.footer),
             createOverwriteableField('string', {
                 name: 'pageClass',
