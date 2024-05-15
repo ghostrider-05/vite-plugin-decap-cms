@@ -55,7 +55,7 @@ async function updateConfig (options: Options, config: ResolvedConfig) {
         }
     )
 
-    if (config.command === 'serve' && (options.proxy?.enabled ?? true)) {
+    if (config.command === 'serve' && configFile.local_backend !== false && (options.proxy?.enabled ?? true)) {
         runProxy(options.proxy)
     }
 
