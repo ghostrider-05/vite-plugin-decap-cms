@@ -61,8 +61,8 @@ See [the documentation CMS](https://vite-plugin-decap-cms.pages.dev/admin/index.
 ## Development
 
 ```sh
+# in /docs/
 npm run docs:dev
-npm run cms:dev
 ```
 
 ## License

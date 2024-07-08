@@ -136,6 +136,7 @@ For collections the following options are also available:
 For each field the following data can be changed:
 
 - `hidden`: set to `true` to hide this field in the editor
+- `deleted`: do not include this field in the frontmatter and editor
 - all base field properties:
   - `label`
   - `required`

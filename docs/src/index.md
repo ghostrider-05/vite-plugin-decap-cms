@@ -19,7 +19,7 @@ features:
     - title: TypeScript
       details: Create CMS configuration with types, helper functions and more
     - title: Test locally
-      details: Test on your local repo in dev, but keep your backend on prod. Without changing the config.
+      details: Test on your local files in dev, but keep your backend on prod. Without changing the config.
     - title: One configuration
       details: Use one source of truth to manage everything in Decap CMS
     - title: Run context options

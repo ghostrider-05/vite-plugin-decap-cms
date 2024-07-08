@@ -204,7 +204,7 @@ export interface Options {
     /**
      * How to load Decap CMS
      * @default
-     * { method: 'cdn'}
+     * { method: 'cdn', options: { version: '^3.1.11' }}
      */
     load?:
         | { method: 'cdn', options?: CdnLinkOptions }

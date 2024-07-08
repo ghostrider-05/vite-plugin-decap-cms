@@ -10,7 +10,7 @@ import type {
 } from './types'
 import { CmsFieldBase } from 'decap-cms-core'
 
-export function getGitData () {
+export function getGitData() {
     const executeGit = (command: string) => {
         try {
             return execSync(command)
@@ -22,10 +22,10 @@ export function getGitData () {
     }
 
     return {
-        get branch() {
+        getBranch() {
             return executeGit('git rev-parse --abbrev-ref HEAD')
         },
-        get commitSha() {
+        getCommitSha() {
             return executeGit('git rev-parse HEAD')
         },
     }
@@ -45,7 +45,7 @@ export function createFolderCollection(data: DecapCmsCollection<'folder'>) {
     return data
 }
 
-export function createFile (data: DecapCmsCollectionFile) {
+export function createFile(data: DecapCmsCollectionFile) {
     return data
 }
 
@@ -59,30 +59,52 @@ export type OverwriteOptions = Omit<CmsFieldBase, 'name'> & {
      * @default false
      */
     hidden?: boolean
+
+    /**
+     * Hide this field in the CMS editor UI and do not include it in the frontmatter.
+     * @default false
+     */
+    deleted?: boolean
 }
 
 function createOverwriteableField<T extends DecapCmsFieldType>(
     widget: T,
     data: Omit<DecapCmsFieldWidget<T>, 'widget'>,
     overwrites?: OverwriteOptions,
-): DecapCmsFieldWidget<T> | DecapCmsFieldWidget<'hidden'> {
+): DecapCmsFieldWidget<T> | DecapCmsFieldWidget<'hidden'> | undefined {
     if (overwrites != undefined) {
-        const toAdd = (key: Exclude<keyof OverwriteOptions, 'hidden'>): void => {
+        const toAdd = (key: Exclude<keyof OverwriteOptions, 'hidden' | 'deleted'>): void => {
             if (overwrites?.[key] != undefined && data[key] !== overwrites[key]) data[key] = <never>overwrites[key]
         }
 
         for (const key of <(keyof OverwriteOptions)[]>Object.keys(overwrites)) {
-            if (key !== 'hidden') {
+            if (key !== 'hidden' && key !== 'deleted') {
                 toAdd(key)
             }
         }
     }
 
-    if (overwrites?.hidden && widget !== 'hidden') return createField('hidden', data)
+    if (overwrites?.deleted) return undefined
+    else if (overwrites?.hidden && widget !== 'hidden') return createField('hidden', data)
     else return <never>{
         ...data,
         widget,
     }
+}
+
+function filterUndefined <T>(item: T | undefined): item is T {
+    return item != undefined
+}
+
+function omit <
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    T extends {},
+    K extends string
+>(obj: T | undefined, keys: K[]): Omit<T, K> | undefined {
+    if (!obj) return undefined
+
+    const validEntries = Object.entries(obj).filter(([key]) => !(<string[]>keys).includes(key))
+    return Object.fromEntries(validEntries) as Omit<T, K>
 }
 
 export type VitePressPageFrontmatterKeys =
@@ -106,6 +128,7 @@ export interface VitePressFieldOptions extends BaseVitePressFieldOptions<VitePre
 }
 
 export type VitePressDefaultThemeFrontmatterKeys =
+    | 'layout'
     | 'navbar'
     | 'sidebar'
     | 'aside'
@@ -117,9 +140,33 @@ export type VitePressDefaultThemeFrontmatterKeys =
 
 export type VitePressDefaultThemeFieldOptions = BaseVitePressFieldOptions<VitePressDefaultThemeFrontmatterKeys>
 
+export type VitePressHomePageFrontmatterKeys =
+    | 'hero'
+    | 'heroName'
+    | 'heroText'
+    | 'heroTagline'
+    | 'heroImage'
+    | 'heroActions'
+    | 'heroActionTheme'
+    | 'heroActionText'
+    | 'heroActionLink'
+    | 'heroActionTarget'
+    | 'heroActionRel'
+    | 'features'
+    | 'featuresTitle'
+    | 'featuresDetails'
+    | 'featuresIcon'
+    | 'featuresLink'
+    | 'featuresLinkText'
+    | 'featuresRel'
+    | 'featuresTarget'
+
+export type VitePressHomePageFieldOptions = BaseVitePressFieldOptions<VitePressHomePageFrontmatterKeys>
+
 export class VitePress {
     /**
      * Create fields for:
+     * - layout
      * - navbar
      * - sidebar
      * - aside
@@ -139,6 +186,12 @@ export class VitePress {
         const { overwrites } = options ?? {}
 
         return [
+            createOverwriteableField('string', {
+                name: 'layout',
+                label: 'Layout',
+                required: false,
+                default: 'doc',
+            }),
             createOverwriteableField('boolean', {
                 name: 'navbar',
                 label: 'Whether to display the navbar',
@@ -189,7 +242,7 @@ export class VitePress {
                 label: 'Page class',
                 required: false,
             }, overwrites?.pageClass),
-        ]
+        ].filter(filterUndefined)
     }
 
     /**
@@ -225,7 +278,7 @@ export class VitePress {
                 name: 'head',
                 label: 'Head',
             }, overwrites?.head),
-        ]
+        ].filter(filterUndefined)
 
         return fields
             .concat(additionalFields ?? [])
@@ -233,7 +286,124 @@ export class VitePress {
                 ...(options?.markdownOptions ?? {}),
                 name: 'body',
                 label: 'Page content',
-            }, overwrites?.body))
+            }, overwrites?.body) ?? [])
+            .filter(filterUndefined)
+    }
+
+    /**
+     * Create fields for:
+     * - layout: home (not overwriteable)
+     * - hero
+     * - features
+     * 
+     * The object fields (`features`, `hero`, `heroActions`) can not be hidden and deleted.
+     */
+    public static createHomePageFields(
+        options?: VitePressHomePageFieldOptions,
+    ) {
+        const { overwrites } = options ?? {}
+        const keys: (keyof OverwriteOptions)[] = ['hidden', 'deleted']
+
+        return [
+            createField('hidden', {
+                name: 'layout',
+                default: 'home',
+            }),
+            createOverwriteableField('object', {
+                name: 'hero',
+                label: 'Hero items',
+                required: true,
+                fields: [
+                    createOverwriteableField('string', {
+                        name: 'name',
+                        required: false,
+                    }, overwrites?.heroName),
+                    createOverwriteableField('string', {
+                        name: 'text',
+                    }, overwrites?.heroText),
+                    createOverwriteableField('string', {
+                        name: 'tagline',
+                        required: false,
+                    }, overwrites?.heroTagline),
+                    // TODO: add support for object options
+                    createOverwriteableField('image', {
+                        name: 'image',
+                        required: false,
+                    }, overwrites?.heroImage),
+                    createOverwriteableField('list', {
+                        name: 'actions',
+                        label: 'Action buttons',
+                        label_singular: 'action',
+                        allow_add: true,
+                        fields: [
+                            createOverwriteableField('string', {
+                                name: 'text',
+                            }, overwrites?.heroActionText),
+                            createOverwriteableField('string', {
+                                name: 'link',
+                            }, overwrites?.heroActionLink),
+                            createOverwriteableField('select', {
+                                name: 'theme',
+                                required: false,
+                                default: 'brand',
+                                options: [
+                                    'brand',
+                                    'alt',
+                                ],
+                            }, overwrites?.heroActionTheme),
+                            createOverwriteableField('string', {
+                                name: 'target',
+                                required: false,
+                            }, overwrites?.heroActionTarget),
+                            createOverwriteableField('string', {
+                                name: 'rel',
+                                required: false,
+                            }, overwrites?.heroActionRel),
+                        ].filter(filterUndefined)
+                    }, omit(overwrites?.heroActions, keys)),
+                ].filter(filterUndefined),
+            }, omit(overwrites?.hero, keys)) as never,
+            createOverwriteableField('list', {
+                name: 'features',
+                label: 'Features',
+                label_singular: 'feature',
+                allow_add: true,
+                required: false,
+                fields: [
+                    createOverwriteableField('string', {
+                        name: 'title',
+                        required: true,
+                    }, overwrites?.featuresTitle),
+                    createOverwriteableField('string', {
+                        name: 'details',
+                        required: false,
+                    }, overwrites?.featuresDetails),
+                    // TODO: add support for object options
+                    createOverwriteableField('string', {
+                        name: 'icon',
+                        required: false,
+                    }, overwrites?.featuresIcon),
+                    createOverwriteableField('string', {
+                        name: 'link',
+                        required: false,
+                    }, overwrites?.featuresLink),
+                    createOverwriteableField('string', {
+                        name: 'linkText',
+                        label: 'Link text',
+                        required: false,
+                    }, overwrites?.featuresLinkText),
+                    createOverwriteableField('string', {
+                        name: 'target',
+                        label: 'Target',
+                        required: false,
+                    }, overwrites?.featuresTarget),
+                    createOverwriteableField('string', {
+                        name: 'rel',
+                        required: false,
+                    }, overwrites?.featuresRel),
+                ].filter(filterUndefined),
+            }, omit(overwrites?.features, keys)),
+        ]
     }
 
     public static createDefaultPageFolderCollection(
@@ -255,7 +425,7 @@ export class VitePress {
         })
     }
 
-    public static createDefaultPageFile (
+    public static createDefaultPageFile(
         name: string,
         file: string,
         options?: VitePressFieldOptions & {
@@ -274,7 +444,7 @@ export class VitePress {
         })
     }
 
-    public static createDefaultPageFileCollection (
+    public static createDefaultPageFileCollection(
         name: string,
         files: Parameters<typeof VitePress['createDefaultPageFile']>[],
         options?: {

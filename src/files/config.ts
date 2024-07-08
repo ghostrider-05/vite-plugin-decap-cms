@@ -24,9 +24,10 @@ function getBooleanFromEnv (value: EnvContextOption | undefined, command: ViteCo
 
 function resolveBackend (options: DecapCmsConfig['backend'], command: ViteCommand) {
     const { local, name, ...backend } = options
+    const git = getGitData()
 
     const branch = 'useCurrentBranch' in options && getBooleanFromEnv(options.useCurrentBranch, command)
-        ? getGitData().branch
+        ? git.getBranch()
         : 'branch' in backend
             ? backend.branch
             : undefined

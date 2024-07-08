@@ -2,7 +2,7 @@ import { createScript } from '../script'
 
 import type { CdnLinkOptions, HeadConfig, Options } from '../types'
 
-export const defaultDecapCmsCdnVersion = '3.1.3' as const
+export const defaultDecapCmsCdnVersion = '3.1.11' as const
 export const defaultNetlifyIdentityVersion = '1' as const
 
 const addSlash = (path: string, slash = '/') => path.endsWith(slash) ? path : path + slash
