@@ -53,7 +53,7 @@ export default defineConfig({
 
         externalLinkIcon: true,
         editLink: {
-            pattern: ({ relativePath }) => `/admin/index.html#/edit/${relativePath.replace('.md', '').replace}`
+            pattern: ({ relativePath }) => `/admin/index.html#/edit/${relativePath.replace('.md', '')}`
         },
 
         socialLinks: [
