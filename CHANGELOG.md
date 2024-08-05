@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.1](https://github.com/ghostrider-05/vite-plugin-decap-cms/compare/vite-plugin-decap-cms-v0.3.0...vite-plugin-decap-cms-v0.3.1) (2024-08-05)
+
+
+### Bug Fixes
+
+* **deps:** set decap-cms-core as normal dependency ([#9](https://github.com/ghostrider-05/vite-plugin-decap-cms/issues/9)) ([ed1b006](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/ed1b00679a6ef0f73bb4914749560c10715fa5eb))
+* **vitepress:** add missing additional fields for home page ([ed1b006](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/ed1b00679a6ef0f73bb4914749560c10715fa5eb))
+* **vitepress:** do not set default booleans ([ed1b006](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/ed1b00679a6ef0f73bb4914749560c10715fa5eb))
+
 ## [0.3.0](https://github.com/ghostrider-05/vite-plugin-decap-cms/compare/vite-plugin-decap-cms-v0.2.0...vite-plugin-decap-cms-v0.3.0) (2024-07-08)
 
 
