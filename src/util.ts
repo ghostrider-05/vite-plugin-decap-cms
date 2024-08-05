@@ -1,5 +1,9 @@
 import { execSync } from 'child_process'
 
+import type { CmsFieldBase, CmsField } from 'decap-cms-core'
+
+import { objToSnakeCase } from './files/config'
+
 import type {
     DecapCmsCollection,
     DecapCmsCollectionFile,
@@ -8,7 +12,6 @@ import type {
     DecapCmsFieldWidget,
     DecapCmsMarkdownFieldRenderOptions,
 } from './types'
-import { CmsFieldBase } from 'decap-cms-core'
 
 export function getGitData() {
     const executeGit = (command: string) => {
@@ -162,6 +165,11 @@ export type VitePressHomePageFrontmatterKeys =
     | 'featuresTarget'
 
 export type VitePressHomePageFieldOptions = BaseVitePressFieldOptions<VitePressHomePageFrontmatterKeys>
+    & Partial<Record<
+        | 'additionalHeroFields'
+        | 'additionalHeroActionFields'
+        | 'additionalFeatureFields'
+    , DecapCmsField[]>>
 
 export class VitePress {
     /**
@@ -190,51 +198,43 @@ export class VitePress {
                 name: 'layout',
                 label: 'Layout',
                 required: false,
-                default: 'doc',
             }),
             createOverwriteableField('boolean', {
                 name: 'navbar',
                 label: 'Whether to display the navbar',
-                default: true,
                 required: false,
             }, overwrites?.navbar),
             createOverwriteableField('boolean', {
                 name: 'sidebar',
                 label: 'Whether to display the sidebar',
-                default: true,
                 required: false,
             }, overwrites?.sidebar),
             // TODO: add aside 'left' option
             createOverwriteableField('boolean', {
                 name: 'aside',
                 label: 'Whether to display the aside container',
-                default: true,
                 required: false,
             }, overwrites?.aside),
             // TODO: add support for [number, number] | 'deep' | false
             createOverwriteableField('number', {
                 name: 'outline',
                 label: 'The header levels in the outline',
-                default: 2,
                 required: false,
             }, overwrites?.outline),
             // TODO: add support for Date 
             createOverwriteableField('boolean', {
                 name: 'lastUpdated',
                 label: 'Whether to display last updated text',
-                default: true,
                 required: false,
             }, overwrites?.lastUpdated),
             createOverwriteableField('boolean', {
                 name: 'editLink',
                 label: 'Whether to display edit link text',
-                default: true,
                 required: false,
             }, overwrites?.editLink),
             createOverwriteableField('boolean', {
                 name: 'footer',
                 label: 'Whether to display footer text',
-                default: true,
                 required: false,
             }, overwrites?.footer),
             createOverwriteableField('string', {
@@ -304,6 +304,10 @@ export class VitePress {
         const { overwrites } = options ?? {}
         const keys: (keyof OverwriteOptions)[] = ['hidden', 'deleted']
 
+        function addAdditionalFields (fields: DecapCmsField[] | undefined): CmsField[] {
+            return fields?.map<CmsField>(f => objToSnakeCase(<never>f)) ?? []
+        }
+
         return [
             createField('hidden', {
                 name: 'layout',
@@ -359,8 +363,10 @@ export class VitePress {
                                 name: 'rel',
                                 required: false,
                             }, overwrites?.heroActionRel),
+                            ...addAdditionalFields(options?.additionalHeroActionFields),
                         ].filter(filterUndefined)
                     }, omit(overwrites?.heroActions, keys)),
+                    ...addAdditionalFields(options?.additionalHeroFields),
                 ].filter(filterUndefined),
             }, omit(overwrites?.hero, keys)) as never,
             createOverwriteableField('list', {
@@ -401,6 +407,7 @@ export class VitePress {
                         name: 'rel',
                         required: false,
                     }, overwrites?.featuresRel),
+                    ...addAdditionalFields(options?.additionalFeatureFields ?? []),
                 ].filter(filterUndefined),
             }, omit(overwrites?.features, keys)),
         ]
