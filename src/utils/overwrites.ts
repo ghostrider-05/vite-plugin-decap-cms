@@ -1,56 +1,11 @@
-import { execSync } from 'node:child_process'
-
 import type { CmsFieldBase } from 'decap-cms-core'
 
 import type {
-    DecapCmsCollection,
-    DecapCmsCollectionFile,
     DecapCmsFieldType,
     DecapCmsFieldWidget,
-} from './types'
+} from '../types'
 
-export function getGitData() {
-    const executeGit = (command: string) => {
-        try {
-            return execSync(command)
-                .toString('utf8')
-                .replace(/[\n\r\s]+$/, '')
-        } catch {
-            // error
-        }
-    }
-
-    return {
-        getBranch() {
-            return executeGit('git rev-parse --abbrev-ref HEAD')
-        },
-        getCommitSha() {
-            return executeGit('git rev-parse HEAD')
-        },
-    }
-}
-
-export function createField<T extends DecapCmsFieldType>(
-    widget: T,
-    data: Omit<DecapCmsFieldWidget<T>, 'widget'>
-): DecapCmsFieldWidget<T> {
-    return <never>{
-        ...data,
-        widget,
-    }
-}
-
-export function createFolderCollection(data: DecapCmsCollection<'folder'>) {
-    return data
-}
-
-export function createFile(data: DecapCmsCollectionFile) {
-    return data
-}
-
-export function createFileCollection(data: DecapCmsCollection<'file'>) {
-    return data
-}
+import { createField } from './collection'
 
 export type OverwriteOptions = Omit<CmsFieldBase, 'name'> & {
     /**

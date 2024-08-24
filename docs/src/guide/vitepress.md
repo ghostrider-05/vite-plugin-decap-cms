@@ -25,7 +25,7 @@ export default defineConfig ({
 })
 ```
 
-::: tip Workaround
+:::info Workaround
 A custom `target` and `rel` attributes are not supported in the `editLink` configuration.
 
 To add the `target` attribute you will need to use a custom Vite plugin in your configuration:
@@ -63,7 +63,7 @@ export default defineConfig({
 import {
     VitePress,
     type Options,
-} from '../../../../src/'
+} from 'vite-plugin-decap-cms'
 
 const options: Options = {
     config: {
@@ -91,7 +91,7 @@ const options: Options = {
 import {
     VitePress,
     type Options,
-} from '../../../../src/'
+} from 'vite-plugin-decap-cms'
 
 const options: Options = {
     config: {

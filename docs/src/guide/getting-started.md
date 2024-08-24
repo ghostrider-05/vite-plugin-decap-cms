@@ -89,3 +89,36 @@ export default <Options> {
     }
 }
 ```
+
+:::info Reusable collection options
+
+```ts
+import { createSharedCollectionOptions } from 'vite-plugin-decap-cms'
+
+const createOptions = createSharedCollectionOptions({
+    publish: false,
+    create: true,
+    name: {
+        action: 'append',
+        value: 'guide_',
+    },
+})
+
+const folderOptions = {
+    fields: [],
+    ...createOptions({
+        label: 'Folder collection',
+        name: 'folder',
+    }),
+}
+// Is equal to:
+const folderOptions = {
+    fields: [],
+    publish: false,
+    create: true,
+    name: 'guide_folder',
+    label: 'Folder collection',
+}
+```
+
+:::

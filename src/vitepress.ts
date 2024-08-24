@@ -1,7 +1,5 @@
 import type { CmsField } from 'decap-cms-core'
 
-import { objToSnakeCase } from './files/config'
-
 import type {
     DecapCmsCollection,
     DecapCmsCollectionFile,
@@ -14,9 +12,10 @@ import {
     createFile,
     createFileCollection,
     createFolderCollection,
-    createOverwriteableField,
-    type OverwriteOptions,
-} from './util'
+} from './utils/collection'
+
+import { filterUndefined, objToSnakeCase, omit, pick } from './utils/object'
+import { createOverwriteableField, OverwriteOptions } from './utils/overwrites'
 
 export type VitePressPageFrontmatterKeys =
     | 'title'
@@ -79,32 +78,6 @@ export type VitePressHomePageFieldOptions = BaseVitePressFieldOptions<VitePressH
         | 'additionalHeroActionFields'
         | 'additionalFeatureFields'
     , DecapCmsField[]>>
-
-function filterUndefined<T>(item: T | undefined): item is T {
-    return item != undefined
-}
-
-function omit<
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    T extends {},
-    K extends string
->(obj: T | undefined, keys: K[]): Omit<T, K> {
-    if (!obj) return {} as Omit<T, K>
-
-    const validEntries = Object.entries(obj).filter(([key]) => !(<string[]>keys).includes(key))
-    return Object.fromEntries(validEntries) as Omit<T, K>
-}
-
-function pick<
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    T extends {},
-    K extends keyof T
->(obj: T | undefined, keys: K[]): Pick<T, K> {
-    if (!obj) return {} as Pick<T, K>
-
-    const validEntries = Object.entries(obj).filter(([key]) => (<string[]>keys).includes(key))
-    return Object.fromEntries(validEntries) as Pick<T, K>
-}
 
 const overwriteKeys: (keyof OverwriteOptions)[] = [
     'comment',
