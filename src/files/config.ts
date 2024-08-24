@@ -1,24 +1,15 @@
 import type { ResolvedConfig } from 'vite'
 
-import { getGitData } from '../util'
+import { getGitData } from '../utils/git'
+import { type LogFn } from '../utils/log'
+import { objToSnakeCase } from '../utils/object'
 
 import type {
     DecapCmsConfig,
     EnvContextOption,
-    KeysToSnakeCase,
 } from '../types'
-import { LogFn } from '../log'
 
 export type ViteCommand = ResolvedConfig['command']
-
-export const objToSnakeCase = <T extends object>(obj: T) => {
-    const ignoredKeys = ['i18n']
-    const camelToSnakeCase = (str: string) => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
-
-    return Object.fromEntries(
-        Object.entries(obj).map(([k, v]) => [ignoredKeys.includes(k) ? k : camelToSnakeCase(k), v])
-    ) as KeysToSnakeCase<{ [k in keyof T]: T[k] }>
-}
 
 function getBooleanFromEnv (value: EnvContextOption | undefined, command: ViteCommand): boolean {
     return value === 'dev'

@@ -17,24 +17,7 @@ import type {
 
 import { ScriptOptions } from './script'
 
-type CamelToSnakeCase<S extends string, I extends string = never> = S extends `${infer T}${infer U}` ?
-    S extends I ? S :
-    `${T extends Capitalize<T> ? '_' : ''}${Lowercase<T>}${CamelToSnakeCase<U>}` :
-    S
-
-export type KeysToSnakeCase<T> = {
-    [K in keyof T as CamelToSnakeCase<string & K, 'i18n'>]: T[K]
-}
-
-type CamelCase<S extends string> = S extends `${infer P1}_${infer P2}${infer P3}`
-  ? `${Lowercase<P1>}${Uppercase<P2>}${CamelCase<P3>}`
-  : Lowercase<S>
-
-export type KeysToCamelCase<T> = {
-    [K in keyof T as CamelCase<string &K>]: T[K] extends {} ? KeysToCamelCase<T[K]> : T[K]
-}
-
-type PickRequired<O extends object, K extends keyof O> = Omit<O, K> & Required<Pick<O, K>>
+import type { KeysToCamelCase, PickRequired } from './utils/object'
 
 export type EnvContextOption =
     | boolean
