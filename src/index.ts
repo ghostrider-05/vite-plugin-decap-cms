@@ -12,33 +12,42 @@ import {
     writeToFolder,
 } from './files'
 
-function validateLoadOptions (options: Options['load']) {
+import { createLogger, LogFn } from './log'
+
+function validateLoadOptions (options: Options['load'], log: LogFn) {
     const valid = ['npm', 'cdn'].includes(options?.method ?? 'cdn')
        
-    if (!valid) throw new Error('Invalid load options for decap-cms provided')
+    if (!valid) log('config', 'stderr', 'Invalid load options for decap-cms provided')
 }
 
-function runProxy (options: DecapProxyOptions | undefined) {
+function runProxy (options: DecapProxyOptions | undefined, log: LogFn) {
+    const port = (options?.port ?? 8081).toString()
+
+    log('proxy', 'debug', `Starting decap-server on port ${port}`)
     const proxy = exec('npx decap-server', {
         ...(options?.process ?? {}),
         env: {
+            PORT: port,
+            MODE: options?.mode,
+            LOG_LEVEL: options?.logLevel,
+            GIT_REPO_DIRECTORY: options?.gitRepoDirectory,
             ...(options?.process?.env ?? {}),
-            PORT: (options?.port ?? 8081).toString()
         },
     })
 
-    proxy.stdout?.pipe(process.stdout)
+    if (log('proxy', 'stdout')) proxy.stdout?.pipe(process.stdout)
+    // if (log('proxy', 'stderr')) proxy.stderr?.pipe(process.stderr)
 
     proxy.on('error', (err) => {
         if ('code' in err && err.code === 'EADDRINUSE') {
-            console.log('[PROXY] Port is already used')
+            log('proxy', 'stderr', `Port ${port} for decap-server is already used by another process`)
         } else throw err
     })
     process.on('beforeExit', () => proxy.kill())
 }
 
-async function updateConfig (options: Options, config: ResolvedConfig) {
-    validateLoadOptions(options.load)
+async function updateConfig (options: Options, config: ResolvedConfig, log: LogFn) {
+    validateLoadOptions(options.load, log)
 
     const loginFile = createIndexFile(options)
     const configFile = createConfigFile(options.config, config.command)
@@ -56,7 +65,7 @@ async function updateConfig (options: Options, config: ResolvedConfig) {
     )
 
     if (config.command === 'serve' && configFile.local_backend !== false && (options.proxy?.enabled ?? true)) {
-        runProxy(options.proxy)
+        runProxy(options.proxy, log)
     }
 
     await options.script?.onConfigUpdated?.()
@@ -67,25 +76,24 @@ async function updateConfig (options: Options, config: ResolvedConfig) {
 
 export * from './types'
 export * from './util'
+export * from './vitepress'
 
 export default function VitePluginDecapCMS (options: Options): Plugin {
     let stored: ResolvedConfig | null = null
-    const debug = (...str: string[]) => {
-        if (options.debug) console.debug(str)
-    }
 
     return {
         name: 'vite-plugin-decap-cms',
         async configResolved(config) {
             const isUpdated = stored != null ? (stored.command !== config.command || stored.publicDir !== config.publicDir) : true
+            const log = createLogger(options.debug)
 
             if (isUpdated) {
-                await updateConfig(options, config)
+                await updateConfig(options, config, log)
                 stored = config
 
-                debug('\nUpdated Decap CMS configuration')
+                log('config', 'debug', 'Updated Decap CMS configuration files')
             } else {
-                debug('\nSkipped updating Decap CMS')
+                log('config', 'debug', 'Skipped updating Decap CMS configuration files')
             }
         },
     } satisfies Plugin

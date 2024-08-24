@@ -56,6 +56,8 @@ export default <Options>{
         ]
     },
 
+    debug: true,
+
     config: {
         backend: {
             local: 'dev',

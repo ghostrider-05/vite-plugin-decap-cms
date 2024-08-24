@@ -194,6 +194,29 @@ export interface DecapProxyOptions {
     port?: number
 
     /**
+     * Undocumented.
+     * 
+     * Option for the process environment variable 'MODE'.
+     * @default 'fs'
+     */
+    mode?: 'git' | 'fs'
+
+    /**
+     * Option for the process environment variable 'GIT_REPO_DIRECTORY'.
+     * 
+     * The full local path to the git repo
+     * @default 'process.cwd()'
+     */
+    gitRepoDirectory?: string
+
+    /**
+     * Option for the process environment variable 'LOG_LEVEL'.
+     * 
+     * @default 'info'
+     */
+    logLevel?: string
+
+    /**
      * Pass any option to use in the child process
      * @default undefined
      */
