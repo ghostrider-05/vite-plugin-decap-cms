@@ -26,21 +26,33 @@ export default defineConfig ({
 ```
 
 ::: tip Workaround
-In VitePress `v1.0.0` custom `target` and `rel` attributes are not supported in the `editLink` configuration.
+A custom `target` and `rel` attributes are not supported in the `editLink` configuration.
 
-To add the `target` attribute you will need to use a custom layout with the following code in the setup script:
+To add the `target` attribute you will need to use a custom Vite plugin in your configuration:
 
 ```ts
-import { onMounted } from 'vue';
+import { type Plugin } from 'vitepress'
 
-import { useRouter } from 'vitepress/client';
-import DefaultTheme from 'vitepress/theme'
+const vitepressEditLinkPlugin: Plugin = {
+    name: 'make-edit-link-external',
+    enforce: 'pre',
+    transform: (code, id) => {
+        if (id.endsWith('VPDocFooter.vue')) {
+            const link = '<VPLink class="edit-link-button"'
+            return code.replace(link, link + ' target="_self"')
+        }
+    },
+}
 
-const router = useRouter()
-const update = () => document.getElementsByClassName('edit-link-button')[0]?.setAttribute('target', '_self')
+export default defineConfig({
+    // ...
 
-onMounted(update)
-router.onAfterRouteChanged = update
+    vite: {
+        plugins: [
+            vitepressEditLinkPlugin,
+        ],
+    }
+})
 ```
 
 :::
@@ -123,7 +135,7 @@ const options: Options = {
 
 Each method for creating fields (or collections with fields) has the following options exposed:
 
-- `additionFields`: an array of fields to append to the default VitePress fields.
+- `additionalFields`: an array of fields to append to the default VitePress fields.
 - `overwrites`: an array of [overwriting field data](#overwrite-field-data)
 - `markdownOptions`: options for the markdown editor of the `body` field
 
