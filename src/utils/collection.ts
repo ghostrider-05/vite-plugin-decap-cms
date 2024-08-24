@@ -41,6 +41,7 @@ type SharedAction<Type> = (Type extends (string | undefined) ? true : Type exten
 } | Type) : Type
 
 type PartialIf<If extends boolean, T> = If extends true ? Partial<T> : T
+type Invert<T extends boolean> = T extends true ? false : true
 
 export type SharedDecapCmsCollection<Type extends CollectionType> = Omit<DecapCmsCollection<Type>,
     | 'fields'
@@ -69,14 +70,14 @@ export function createSharedCollectionOptions <
     options?: SharedOptions<Parent>,
 ) {
     return function (
-        collection: PartialIf<Parent extends false ? true : false, SharedDecapCmsCollection<ChildType>>,
+        collection: PartialIf<Invert<Parent>, SharedDecapCmsCollection<ChildType>>,
     ): SharedDecapCmsCollection<ChildType> {
         // Exclude the shared option if field is in the options, since the filter field also has a value property
         const isSharedOptions = (value: unknown) => {
             return value != undefined && typeof value === 'object' && 'value' in value && !('field' in value)
         }
 
-        const combinedWithShared = keyof(collection).reduce<PartialIf<Parent extends false ? true : false, SharedDecapCmsCollection<ChildType>>>((output, key) => {
+        const combinedWithShared = keyof(collection).reduce<PartialIf<Invert<Parent>, SharedDecapCmsCollection<ChildType>>>((output, key) => {
             const collectionValue = collection[key]
             const sharedValue = shared[key as keyof typeof shared]
             

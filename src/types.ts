@@ -17,7 +17,12 @@ import type {
 
 import { ScriptOptions } from './script'
 
-import type { KeysToCamelCase, PickRequired } from './utils/object'
+import type { KeysToCamelCase, KeysToSnakeCase, PickRequired } from './utils/object'
+
+export type {
+    KeysToCamelCase,
+    KeysToSnakeCase,
+}
 
 export type EnvContextOption =
     | boolean
