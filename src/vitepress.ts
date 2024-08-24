@@ -215,6 +215,7 @@ export class VitePress {
      * - titleTemplate
      * - description
      * - head
+     * - body (field for writing the markdown in the file)
      * @param options.overwrites Overwrite data, such as labels, for the fields
      * @see https://vitepress.dev/reference/frontmatter-config
      */

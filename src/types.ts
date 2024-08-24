@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
+import type { ExecOptions } from 'node:child_process'
+
 import type {
     CmsField,
     CmsConfig,
@@ -14,7 +16,6 @@ import type {
 } from 'decap-cms-core'
 
 import { ScriptOptions } from './script'
-import { ExecOptions } from 'child_process'
 
 type CamelToSnakeCase<S extends string, I extends string = never> = S extends `${infer T}${infer U}` ?
     S extends I ? S :

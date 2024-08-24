@@ -1,4 +1,4 @@
-import { exec } from 'child_process'
+import { exec } from 'node:child_process'
 
 import { stringify } from 'yaml'
 import { type ResolvedConfig, type Plugin } from 'vite'
@@ -49,15 +49,14 @@ function runProxy (options: DecapProxyOptions | undefined, log: LogFn) {
 async function updateConfig (options: Options, config: ResolvedConfig, log: LogFn) {
     validateLoadOptions(options.load, log)
 
-    const loginFile = createIndexFile(options)
-    const configFile = createConfigFile(options.config, config.command)
+    const configFile = createConfigFile(options.config, config.command, log)
 
     await writeToFolder(
         resolveDir(config.publicDir, options.dir),
         {
             subfolder: 'admin',
             files: [
-                { name: 'index.html', content: loginFile },
+                { name: 'index.html', content: createIndexFile(options) },
                 { name: 'config.yml', content: stringify(configFile, options.yml?.replacer, options.yml?.options) },
                 // { name: 'npm.js', content: createCustomScript(), skip: options.load?.method !== 'npm' },
             ]
@@ -84,10 +83,12 @@ export default function VitePluginDecapCMS (options: Options): Plugin {
     return {
         name: 'vite-plugin-decap-cms',
         async configResolved(config) {
-            const isUpdated = stored != null ? (stored.command !== config.command || stored.publicDir !== config.publicDir) : true
+            const needsUpdate = stored != null
+                ? (stored.command !== config.command || stored.publicDir !== config.publicDir)
+                : true
             const log = createLogger(options.debug)
 
-            if (isUpdated) {
+            if (needsUpdate) {
                 await updateConfig(options, config, log)
                 stored = config
 

@@ -1,5 +1,5 @@
-import { mkdir, writeFile } from 'fs/promises'
-import { resolve, isAbsolute, sep } from 'path'
+import { mkdir, writeFile } from 'node:fs/promises'
+import { resolve, isAbsolute, sep } from 'node:path'
 
 export function resolveDir (publicDir: string, dir?: string) {
     return dir 
