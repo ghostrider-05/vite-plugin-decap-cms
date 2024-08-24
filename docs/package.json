@@ -12,6 +12,6 @@
   "author": "ghostrider-05",
   "license": "ISC",
   "devDependencies": {
-    "vitepress": "1.3.2"
+    "vitepress": "1.3.4"
   }
 }

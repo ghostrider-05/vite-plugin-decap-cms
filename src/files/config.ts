@@ -1,9 +1,15 @@
+import type { ResolvedConfig } from 'vite'
+
 import { getGitData } from '../util'
 
-import type { ResolvedConfig } from 'vite'
-import type { DecapCmsConfig, EnvContextOption, KeysToSnakeCase } from '../types'
+import type {
+    DecapCmsConfig,
+    EnvContextOption,
+    KeysToSnakeCase,
+} from '../types'
+import { LogFn } from '../log'
 
-type ViteCommand = ResolvedConfig['command']
+export type ViteCommand = ResolvedConfig['command']
 
 export const objToSnakeCase = <T extends object>(obj: T) => {
     const ignoredKeys = ['i18n']
@@ -48,7 +54,7 @@ function resolveBackend (options: DecapCmsConfig['backend'], command: ViteComman
     return resolved
 }
 
-export function createConfigFile (config: DecapCmsConfig, command: ViteCommand) {
+export function createConfigFile (config: DecapCmsConfig, command: ViteCommand, log: LogFn) {
     const { backend, collections, ...options } = config
 
     return {
@@ -76,7 +82,7 @@ export function createConfigFile (config: DecapCmsConfig, command: ViteCommand) 
                         }
                     }),
                 }
-            } else throw new Error('Missing either fields or files property in collection')
+            } else log('config', 'stderr', 'Missing either fields or files property in collection')
         }),
     }
 }

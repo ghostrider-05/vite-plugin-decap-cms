@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { type Component } from 'vue'
+
 import type { 
     CMS,
     CmsEventListener,
@@ -8,7 +10,6 @@ import type {
     Formatter,
     PreviewTemplateComponentProps,
 } from 'decap-cms-core'
-import { type Component } from 'vue'
 
 import type { DecapCmsField, DecapCmsFieldWidget } from './types'
 // import veuary from 'veaury'

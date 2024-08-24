@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
+import type { ExecOptions } from 'node:child_process'
+
 import type {
     CmsField,
     CmsConfig,
@@ -14,7 +16,6 @@ import type {
 } from 'decap-cms-core'
 
 import { ScriptOptions } from './script'
-import { ExecOptions } from 'child_process'
 
 type CamelToSnakeCase<S extends string, I extends string = never> = S extends `${infer T}${infer U}` ?
     S extends I ? S :
@@ -192,6 +193,29 @@ export interface DecapProxyOptions {
      * @default 8081
      */
     port?: number
+
+    /**
+     * Undocumented.
+     * 
+     * Option for the process environment variable 'MODE'.
+     * @default 'fs'
+     */
+    mode?: 'git' | 'fs'
+
+    /**
+     * Option for the process environment variable 'GIT_REPO_DIRECTORY'.
+     * 
+     * The full local path to the git repo
+     * @default 'process.cwd()'
+     */
+    gitRepoDirectory?: string
+
+    /**
+     * Option for the process environment variable 'LOG_LEVEL'.
+     * 
+     * @default 'info'
+     */
+    logLevel?: string
 
     /**
      * Pass any option to use in the child process
