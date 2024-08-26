@@ -12,9 +12,10 @@ import {
     createFile,
     createFileCollection,
     createFolderCollection,
+    fieldToSnakeCase,
 } from './utils/collection'
 
-import { filterUndefined, objToSnakeCase, omit, pick } from './utils/object'
+import { filterUndefined, omit, pick } from './utils/object'
 import { createOverwriteableField, OverwriteOptions } from './utils/overwrites'
 
 export type VitePressPageFrontmatterKeys =
@@ -29,8 +30,10 @@ interface BaseVitePressFieldOptions<Keys extends string> {
         & Partial<OverwriteOptions>
 }
 
+export type VitePressAdditionalField = DecapCmsField | CmsField
+
 export interface VitePressFieldOptions extends BaseVitePressFieldOptions<VitePressPageFrontmatterKeys> {
-    additionalFields?: DecapCmsField[]
+    additionalFields?: VitePressAdditionalField[]
 
     /**
      * Options for the markdown editor in the CMS
@@ -77,7 +80,7 @@ export type VitePressHomePageFieldOptions = BaseVitePressFieldOptions<VitePressH
         | 'additionalHeroFields'
         | 'additionalHeroActionFields'
         | 'additionalFeatureFields'
-    , DecapCmsField[]>>
+    , VitePressAdditionalField[]>>
 
 const overwriteKeys: (keyof OverwriteOptions)[] = [
     'comment',
@@ -127,7 +130,7 @@ export class VitePress {
      */
     public static createDefaultThemeNormalPageFields(
         options?: VitePressDefaultThemeFieldOptions
-    ): DecapCmsField[] {
+    ): CmsField[] {
         const { overwrites } = options ?? {}
 
         return [
@@ -194,10 +197,10 @@ export class VitePress {
      */
     public static createDefaultPageFields(
         options?: VitePressFieldOptions,
-    ): DecapCmsField[] {
+    ): CmsField[] {
         const { additionalFields, overwrites } = options ?? {}
 
-        const fields: DecapCmsField[] = [
+        const fields: CmsField[] = [
             createOverwriteableField('string', {
                 name: 'title',
                 label: 'Title',
@@ -219,7 +222,7 @@ export class VitePress {
         ].filter(filterUndefined)
 
         return fields
-            .concat(additionalFields ?? [])
+            .concat(additionalFields?.map(fieldToSnakeCase) ?? [])
             .concat(createOverwriteableField('markdown', {
                 ...(options?.markdownOptions ?? {}),
                 name: 'body',
@@ -238,12 +241,12 @@ export class VitePress {
      */
     public static createHomePageFields(
         options?: VitePressHomePageFieldOptions,
-    ) {
+    ): CmsField[] {
         const { overwrites } = options ?? {}
         const keys: (keyof OverwriteOptions)[] = ['hidden', 'deleted']
 
-        function addAdditionalFields(fields: DecapCmsField[] | undefined): CmsField[] {
-            return fields?.map<CmsField>(f => objToSnakeCase(<never>f)) ?? []
+        function addAdditionalFields(fields: (CmsField | DecapCmsField)[] | undefined): CmsField[] {
+            return fields?.map(fieldToSnakeCase) ?? []
         }
 
         return [
@@ -306,7 +309,7 @@ export class VitePress {
                     }, omit(mergeOverwrites(overwrites?.heroActions, overwrites), keys)),
                     ...addAdditionalFields(options?.additionalHeroFields),
                 ].filter(filterUndefined),
-            }, omit(mergeOverwrites(overwrites?.hero, overwrites), keys)) as never,
+            }, omit(mergeOverwrites(overwrites?.hero, overwrites), keys)),
             createOverwriteableField('list', {
                 name: 'features',
                 label: 'Features',
@@ -348,7 +351,7 @@ export class VitePress {
                     ...addAdditionalFields(options?.additionalFeatureFields ?? []),
                 ].filter(filterUndefined),
             }, omit(mergeOverwrites(overwrites?.features, overwrites), keys)),
-        ]
+        ].filter(filterUndefined)
     }
 
     public static createDefaultPageFolderCollection(

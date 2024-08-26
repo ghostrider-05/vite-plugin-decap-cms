@@ -1,11 +1,15 @@
+import type { CmsField } from 'decap-cms-core'
+
+import { keyof, objToSnakeCase } from './object'
+
 import type {
     CollectionType,
     DecapCmsCollection,
     DecapCmsCollectionFile,
+    DecapCmsField,
     DecapCmsFieldType,
     DecapCmsFieldWidget,
 } from '../types'
-import { keyof } from './object'
 
 export function createField<T extends DecapCmsFieldType>(
     widget: T,
@@ -27,6 +31,10 @@ export function createFile(data: DecapCmsCollectionFile) {
 
 export function createFileCollection(data: DecapCmsCollection<'file'>) {
     return data
+}
+
+export function fieldToSnakeCase (field: DecapCmsField | CmsField) {
+    return objToSnakeCase(field) as CmsField
 }
 
 type SharedAction<Type> = (Type extends (string | undefined) ? true : Type extends (unknown[] | undefined) ? true : false) extends true ? ({

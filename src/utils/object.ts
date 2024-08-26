@@ -4,7 +4,8 @@ type CamelToSnakeCase<S extends string, I extends string = never> = S extends `$
     S
 
 export type KeysToSnakeCase<T> = {
-    [K in keyof T as CamelToSnakeCase<string & K, 'i18n'>]: T[K]
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    [K in keyof T as CamelToSnakeCase<string & K, 'i18n'>]: T[K] extends boolean ? T[K] : T[K] extends {} ? T[K] extends unknown[] ? KeysToSnakeCase<T[K][number]>[] : KeysToSnakeCase<T[K]> : T[K]
 }
 
 type CamelCase<S extends string> = S extends `${infer P1}_${infer P2}${infer P3}`
@@ -13,7 +14,7 @@ type CamelCase<S extends string> = S extends `${infer P1}_${infer P2}${infer P3}
 
 export type KeysToCamelCase<T> = {
     // eslint-disable-next-line @typescript-eslint/ban-types
-    [K in keyof T as CamelCase<string &K>]: T[K] extends {} ? KeysToCamelCase<T[K]> : T[K]
+    [K in keyof T as CamelCase<string &K>]: T[K] extends boolean ? T[K] : T[K] extends {} ? T[K] extends unknown[] ? KeysToCamelCase<T[K][number]>[] : KeysToCamelCase<T[K]> : T[K]
 }
 
 export const objToSnakeCase = <T extends object>(obj: T) => {
