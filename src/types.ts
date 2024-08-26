@@ -60,14 +60,14 @@ export type DecapCmsFieldWidget<Name extends DecapCmsFieldType> =
             : never
         : never
 
-export type DecapCmsCollectionFile = KeysToCamelCase<Omit<CmsCollectionFile, 'fields'>> & { fields: DecapCmsField[] }
+export type DecapCmsCollectionFile = KeysToCamelCase<Omit<CmsCollectionFile, 'fields'>> & { fields: DecapCmsField[] | CmsField[] }
 
 type BaseDecapCmsCollection<Props> = KeysToCamelCase<
     & Omit<CmsCollection, 'files' | 'fields'>>
     & Props
 
 export type DecapCmsCollection<Type extends CollectionType = CollectionType> = Type extends 'folder'
-    ? BaseDecapCmsCollection<{ fields: DecapCmsField[] }>
+    ? BaseDecapCmsCollection<{ fields: DecapCmsField[] | CmsField[] }>
     : Type extends 'file'
         ? BaseDecapCmsCollection<{ files: DecapCmsCollectionFile[] }>
         : never
