@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.4.0](https://github.com/ghostrider-05/vite-plugin-decap-cms/compare/vite-plugin-decap-cms-v0.3.1...vite-plugin-decap-cms-v0.4.0) (2024-08-26)
+
+
+### Features
+
+* add helper function for shared collection options ([#16](https://github.com/ghostrider-05/vite-plugin-decap-cms/issues/16)) ([b1d6226](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/b1d62264528612771ebdbcea2a0c055d49261b00))
+* export createOverwriteableField ([14e0982](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/14e09824a1e49ee22680c6a24a462949651b8f59))
+* **proxy:** add options for env variables ([14e0982](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/14e09824a1e49ee22680c6a24a462949651b8f59))
+* update dependencies ([14e0982](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/14e09824a1e49ee22680c6a24a462949651b8f59))
+* **VitePress:** add overwrites for all fields ([#14](https://github.com/ghostrider-05/vite-plugin-decap-cms/issues/14)) ([14e0982](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/14e09824a1e49ee22680c6a24a462949651b8f59))
+
+
+### Bug Fixes
+
+* add node: prefix to dependencies ([14e0982](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/14e09824a1e49ee22680c6a24a462949651b8f59))
+* **VitePress:** allow layout field overwites ([14e0982](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/14e09824a1e49ee22680c6a24a462949651b8f59))
+* **VitePress:** type errors with additional fields ([#17](https://github.com/ghostrider-05/vite-plugin-decap-cms/issues/17)) ([7f465b9](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/7f465b93511a493057dd5e8cf5c74bd4ecdb721e))
+
 ## [0.3.1](https://github.com/ghostrider-05/vite-plugin-decap-cms/compare/vite-plugin-decap-cms-v0.3.0...vite-plugin-decap-cms-v0.3.1) (2024-08-05)
 
 
