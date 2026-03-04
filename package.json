@@ -32,25 +32,23 @@
         "build": "tsup src/index.ts --dts --format cjs,esm"
     },
     "overrides": {
-        "react": "^18.3.1",
-        "@types/react": "^18.3.4",
-        "react-dom": "^18.3.1"
+        "react": "^19.2.4",
+        "@types/react": "^19.2.14",
+        "react-dom": "^19.2.4"
     },
     "dependencies": {
-        "decap-cms-core": "^3.4.2",
-        "decap-server": "^3.1.2",
-        "veaury": "^2.4.3",
-        "yaml": "^2.5.0"
+        "decap-cms-core": "^3.10.1",
+        "decap-server": "^3.5.2",
+        "yaml": "^2.8.2"
     },
     "devDependencies": {
         "@types/node": "18",
-        "@typescript-eslint/eslint-plugin": "^7.18.0",
-        "@typescript-eslint/parser": "^7.18.0",
-        "eslint": "^8.57.0",
-        "tsup": "^8.2.4",
-        "typescript": "^5.5.4",
-        "vite": "^5.4.2",
-        "vitest": "^2.0.5",
-        "vue": "^3.4.38"
+        "@typescript-eslint/eslint-plugin": "^8.56.1",
+        "@typescript-eslint/parser": "^8.56.1",
+        "eslint": "^10.0.2",
+        "tsup": "^8.5.1",
+        "typescript": "^5.9.3",
+        "vite": "^5.4.21",
+        "vue": "^3.5.29"
     }
 }
