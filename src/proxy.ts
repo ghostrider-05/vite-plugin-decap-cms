@@ -16,6 +16,8 @@ export function runProxy (options: DecapProxyOptions | undefined, log: LogFn) {
             MODE: options?.mode,
             LOG_LEVEL: options?.logLevel,
             GIT_REPO_DIRECTORY: options?.gitRepoDirectory,
+            BIND_HOST: options?.host,
+            ORIGIN: options?.origin,
             ...(options?.process?.env ?? {}),
         },
     })

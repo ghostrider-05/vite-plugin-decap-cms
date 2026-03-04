@@ -176,11 +176,22 @@ export interface DecapProxyOptions {
     enabled?: boolean
 
     /**
+     * Set the CORS 'Access-Content-Allow-Origin' for the server.
+     * @default '*'
+     */
+    origin?: string
+
+    /**
      * Run the proxy on a different port.
      * Does not change the local backend allowed hosts
      * @default 8081
      */
     port?: number
+
+    /**
+     * Binds the proxy server to an IP address.
+     */
+    host?: string
 
     /**
      * Undocumented.
