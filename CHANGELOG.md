@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.5.0](https://github.com/ghostrider-05/vite-plugin-decap-cms/compare/vite-plugin-decap-cms-v0.4.0...vite-plugin-decap-cms-v0.5.0) (2026-03-05)
+
+
+### Features
+
+* export version in plugin ([ff191bf](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/ff191bf54028add7dc8b44f7de56395e2c989189))
+* **proxy:** add options for BIND_HOST and ORIGIN variables ([e30189d](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/e30189db1bc3007da392b237d9c6513212260908))
+
+
+### Bug Fixes
+
+* update dependencies ([cf9909c](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/cf9909cb72697ebf427fe67179141749b975e728))
+
 ## [0.4.0](https://github.com/ghostrider-05/vite-plugin-decap-cms/compare/vite-plugin-decap-cms-v0.3.1...vite-plugin-decap-cms-v0.4.0) (2024-08-26)
 
 
