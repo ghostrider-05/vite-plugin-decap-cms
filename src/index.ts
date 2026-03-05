@@ -12,11 +12,16 @@ export * from './utils/collection'
 export * from './utils/git'
 export * from './utils/overwrites'
 
+// x-release-please-start-version
+const version = '0.4.0'
+// x-release-please-end
+
 export default function VitePluginDecapCMS (options: Options): Plugin {
     let stored: ResolvedConfig | null = null
 
     return {
         name: 'vite-plugin-decap-cms',
+        version,
         async configResolved(config) {
             const needsUpdate = stored != null
                 ? (stored.command !== config.command || stored.publicDir !== config.publicDir)

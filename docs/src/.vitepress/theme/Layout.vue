@@ -8,7 +8,7 @@ const router = useRouter()
 const update = () => document.getElementsByClassName('edit-link-button')[0]?.setAttribute('target', '_self')
 
 onMounted(update)
-router.onAfterRouteChanged = update
+router.onAfterRouteChange = update
 
 const { Layout } = DefaultTheme
 </script>
