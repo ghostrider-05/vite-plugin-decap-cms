@@ -13,7 +13,7 @@
     "bugs": "https://github.com/ghostrider-05/vite-plugin-decap-cms/issues",
     "repository": {
         "type": "git",
-        "url": "https://github.com/ghostrider-05/vite-plugin-decap-cms"
+        "url": "git+https://github.com/ghostrider-05/vite-plugin-decap-cms"
     },
     "exports": {
         ".": {
