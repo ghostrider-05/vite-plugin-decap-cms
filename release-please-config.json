@@ -5,7 +5,7 @@
             "bump-minor-pre-major": true,
             "release-type": "node",
             "extra-files": [
-                "./src/index.ts"
+                "src/index.ts"
             ]
         }
     }
