@@ -13,7 +13,7 @@ export * from './utils/git'
 export * from './utils/overwrites'
 
 // x-release-please-start-version
-const version = '0.5.0'
+const version = '0.5.1'
 // x-release-please-end
 
 export default function VitePluginDecapCMS (options: Options): Plugin {

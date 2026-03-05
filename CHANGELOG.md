@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/ghostrider-05/vite-plugin-decap-cms/compare/vite-plugin-decap-cms-v0.5.0...vite-plugin-decap-cms-v0.5.1) (2026-03-05)
+
+
+### Bug Fixes
+
+* **ci:** release config updates ([0557667](https://github.com/ghostrider-05/vite-plugin-decap-cms/commit/05576670c16a68552b81b6791e8cb6802033f4e1))
+
 ## [0.5.0](https://github.com/ghostrider-05/vite-plugin-decap-cms/compare/vite-plugin-decap-cms-v0.4.0...vite-plugin-decap-cms-v0.5.0) (2026-03-05)
 
 
